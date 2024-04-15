@@ -37,6 +37,7 @@ newRow.innerHTML = `
             <input type="checkbox" id="task${taskId}" onchange="toggleTaskCompletion(this)">
         </div>
     </td>
+    <td><button class="action-btn" onclick="deleteTask(this)">Delete</button></td>
 `;
 
         taskId++;
@@ -66,17 +67,23 @@ function schedulePopup(taskName, startTime) {
     const start = new Date();
     start.setHours(hours);
     start.setMinutes(minutes);
+    start.setSeconds(0); // Set seconds to 0 to ensure precise timing
+    start.setMilliseconds(0); // Set milliseconds to 0 to ensure precise timing
 
     // Calculate the timeout in milliseconds
-    const timeout = start - now;
+    let timeout = start - now;
 
-    // Check if the timeout is positive (i.e., the start time is in the future)
-    if (timeout > 0) {
-        setTimeout(() => {
-            openPopup(`It's time to start ${taskName}`);
-        }, timeout);
+    // If the timeout is negative, it means the start time has already passed
+    if (timeout < 0) {
+        // Advance the start time to the next day
+        start.setDate(start.getDate() + 1);
+        timeout = start - now;
     }
-    // If the timeout is negative, it means the start time has already passed, so no need to schedule the popup
+
+    // Schedule the popup
+    setTimeout(() => {
+        openPopup(`It's time to start ${taskName}`);
+    }, timeout);
 }
 
 
@@ -97,4 +104,8 @@ function formatTime(time) {
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const formattedHours = hours % 12 || 12;
     return `${formattedHours}:${minutes} ${ampm}`;
+}
+function deleteTask(button) {
+    const row = button.parentNode.parentNode;
+    row.remove();
 }
