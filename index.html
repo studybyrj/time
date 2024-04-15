@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Management App</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <u><h1>Time Management</h1></u><br>
+    <centre><p1>Time:-</p1><div id="clock" class="clock"></div></centre>
+    <div id="tasks" class="tasks">
+        <table id="taskTable">
+            <thead>
+                <tr>
+                    <th>T. No.</th>
+                    <th>Task Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Tasks will be added here -->
+            </tbody>
+        </table>
+    </div>
+    <div class="task-input">
+        <input type="text" id="taskName" placeholder="Task Name">
+        <label for="startTime">StartTime:-</label>
+        <input type="time" id="startTime" placeholder="startTime">
+        <label for="endTime">EndTime:-</label>
+        <input type="time" id="endTime" placeholder="endTime">
+        <button onclick="addTask()">Add Task</button>
+    </div>
+</div>
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <p id="popupMessage"></p>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
