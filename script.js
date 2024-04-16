@@ -18,48 +18,75 @@ function updateTime() {
 }
 setInterval(updateTime, 1000);
 
-// Tasks
+// Function to add a new task
 function addTask() {
-    const taskName = taskNameInput.value;
-    const startTime = startTimeInput.value;
-    const endTime = endTimeInput.value;
+    const taskNameInput = document.getElementById('taskName');
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
 
-    if (taskName && startTime && endTime) {
-        const newRow = tasksContainer.insertRow(-1);
-// Inside addTask() function
-newRow.innerHTML = `
-    <td>${taskId}</td>
-    <td>${taskName}</td>
-    <td>${formatTime(startTime)}</td>
-    <td>${formatTime(endTime)}</td>
-    <td class="status">
-        <div class="checkbox-container">
-            <input type="checkbox" id="task${taskId}" onchange="toggleTaskCompletion(this)">
-        </div>
-    </td>
-    <td><button class="action-btn" onclick="deleteTask(this)">Delete</button></td>
-`;
+    const taskName = taskNameInput.value.trim();
+    const startTime = startTimeInput.value.trim();
+    const endTime = endTimeInput.value.trim();
 
-        taskId++;
-
-        taskNameInput.value = '';
-        startTimeInput.value = '';
-        endTimeInput.value = '';
-
-        schedulePopup(taskName, startTime);
-    } else {
-        alert('Please fill out all fields');
+    if (taskName === '' || startTime === '' || endTime === '') {
+        alert('Please enter all task details');
+        return;
     }
+
+    const taskTable = document.getElementById('taskTable').getElementsByTagName('tbody')[0];
+    const newRow = taskTable.insertRow();
+    const taskId = taskTable.rows.length;
+    newRow.innerHTML = `
+        <td>${taskId}</td>
+        <td>${taskName}</td>
+        <td>${formatTime(startTime)}</td>
+        <td>${formatTime(endTime)}</td>
+        <td class="status">
+            <div class="checkbox-container">
+                <input type="checkbox" id="task${taskId}" onchange="toggleTaskCompletion(this)">
+            </div>
+        </td>
+        <td><button class="action-btn" onclick="deleteTask(this)">Delete</button></td>
+    `;
+
+    taskNameInput.value = '';
+    startTimeInput.value = '';
+    endTimeInput.value = '';
+
+    schedulePopup(taskName, startTime);
+    updateProgress();
 }
 
+// Function to toggle task completion
 function toggleTaskCompletion(checkbox) {
-    const row = checkbox.parentNode.parentNode;
-    if (checkbox.checked) {
-        row.classList.add('completed');
-    } else {
-        row.classList.remove('completed');
-    }
+    const row = checkbox.closest('tr');
+    row.classList.toggle('completed');
+    updateProgress();
 }
+
+// Function to delete a task
+function deleteTask(button) {
+    const row = button.closest('tr');
+    row.remove();
+    updateProgress();
+}
+
+// Function to update the progress bar and text
+function updateProgress() {
+    const totalTasks = document.querySelectorAll('#taskTable tbody tr').length;
+    const completedTasks = document.querySelectorAll('#taskTable tbody tr.completed').length;
+
+    const progressBarFill = document.getElementById('progressBarFill');
+    const progressText = document.getElementById('progressText');
+
+    const percentComplete = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
+
+    progressBarFill.style.width = percentComplete + '%';
+    progressText.textContent = `${completedTasks}/${totalTasks} tasks done`;
+}
+
+// Other functions...
+
 
 function schedulePopup(taskName, startTime) {
     const now = new Date();
@@ -109,3 +136,9 @@ function deleteTask(button) {
     const row = button.parentNode.parentNode;
     row.remove();
 }
+
+// Inside the addTask() function, after the task row is inserted
+updateProgress();
+
+// Inside the toggleTaskCompletion() function, after the class is added or removed
+
