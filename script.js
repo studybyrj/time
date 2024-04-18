@@ -117,9 +117,17 @@ function schedulePopup(taskName, startTime) {
 function openPopup(message) {
     const popup = document.getElementById('popup');
     const popupMessage = document.getElementById('popupMessage');
+    const reminderSound = document.getElementById('reminderSound');
+
     popupMessage.textContent = message;
     popup.style.display = 'block';
+
+    // Play sound effect
+    reminderSound.play();
+
+    setTimeout(closePopup, 40000); // Close popup after 40 seconds
 }
+
 
 function closePopup() {
     const popup = document.getElementById('popup');
